@@ -212,8 +212,8 @@ export default function App() {
   }, []);
 
   const handleRemove = () => {
-    if (image) URL.revokeObjectURL(image);
-    setImage(null); setFileName(''); setFileSize('');
+    if (image && image !== '/Pic.png') URL.revokeObjectURL(image);
+    setImage('/Pic.png'); setFileName('Pic.png'); setFileSize('8.8 MB');
   };
 
   const s = sizes[sizeIdx];
@@ -226,14 +226,14 @@ export default function App() {
   return (
     <div className="app">
       {/* ─── Scene Controller ─── */}
-      <div style={{ position: 'absolute', top: 60, right: 320, zIndex: 1000, background: 'rgba(255,255,255,0.92)', padding: showControls ? 15 : 10, borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.1)', backdropFilter: 'blur(8px)', minWidth: showControls ? 160 : 'auto' }}>
+      <div className={`scene-controller-wrap ${showControls ? 'expanded' : ''}`}>
         <h4 
-          style={{ margin: showControls ? '0 0 10px' : '0', fontSize: showControls ? 12 : 18, cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+          className="scene-controller-title"
           onClick={() => setShowControls(!showControls)}
           title="Scene Controls"
         >
           {showControls ? (
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+            <div className="scene-controller-header">
               <span>⚙️ Scene Controls</span>
               <span>▼</span>
             </div>
@@ -347,18 +347,7 @@ export default function App() {
         </div>
 
         <div className="topbar-center">
-          {!image ? (
-            <button className="topbar-upload-btn" onClick={() => setModalOpen(true)}>
-              📤 Upload Image
-            </button>
-          ) : (
-            <>
-              <button className="topbar-upload-new" onClick={() => setModalOpen(true)}>
-                🔄 Upload New Image
-              </button>
-              <span className="topbar-file-info">{fileName}</span>
-            </>
-          )}
+          {/* Upload button moved to photo section */}
         </div>
 
         <div className="topbar-actions">
@@ -477,24 +466,28 @@ export default function App() {
             {/* Upload */}
             <div className="opt-section">
               <span className="opt-label">Your Photo</span>
-              {!image ? (
+              {image === '/Pic.png' ? (
                 <div className="panel-upload-area" onClick={() => setModalOpen(true)}>
                   <div className="panel-upload-icon">📤</div>
-                  <div className="panel-upload-text">Upload Image</div>
-                  <div className="panel-upload-hint">JPG, PNG, WEBP · Max 20MB</div>
+                  <div className="panel-upload-text">Upload Your Photo</div>
+                  <div className="panel-upload-hint">See it in the 3D frame</div>
                 </div>
               ) : (
-                <div className="panel-preview">
-                  <img src={image} alt="preview" />
-                  <div className="panel-preview-info">
-                    <div className="panel-preview-name">{fileName}</div>
-                    <div className="panel-preview-meta">{fileSize}</div>
+                <>
+                  <div className="panel-preview">
+                    <img src={image} alt="preview" />
+                    <div className="panel-preview-info">
+                      <div className="panel-preview-name">{fileName}</div>
+                      <div className="panel-preview-meta">{fileSize}</div>
+                    </div>
+                    <div className="panel-preview-btns">
+                      <button className="panel-preview-btn remove" onClick={handleRemove} title="Remove">✕</button>
+                    </div>
                   </div>
-                  <div className="panel-preview-btns">
-                    <button className="panel-preview-btn" onClick={() => setModalOpen(true)} title="Change">🔄</button>
-                    <button className="panel-preview-btn remove" onClick={handleRemove} title="Remove">✕</button>
-                  </div>
-                </div>
+                  <button className="panel-upload-new-btn" onClick={() => setModalOpen(true)}>
+                    🔄 Change Photo
+                  </button>
+                </>
               )}
             </div>
 
